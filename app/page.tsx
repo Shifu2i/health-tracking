@@ -27,26 +27,33 @@ export default function DailySummaryPage() {
   const adherenceToday = adherenceRate(data, "day");
   const alerts = generateAlerts(data, today);
   const recs = topRecommendations(data, 3);
-  const todayMetric = data.metrics
-    .filter((m) => m.date === todayKey)
-    .at(-1);
+  const todayMetric = data.metrics.filter((m) => m.date === todayKey).at(-1);
+  const dateLabel = today.toLocaleDateString(undefined, {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+  });
 
   return (
-    <div className="space-y-6">
-      <header className="flex items-baseline justify-between">
-        <h1 className="text-2xl font-semibold">Today</h1>
-        <div className="text-sm text-muted">
-          {today.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" })}
-        </div>
-      </header>
+    <div className="space-y-16">
+      <section className="border-b border-rule pb-10">
+        <div className="eyebrow mb-4">{dateLabel}</div>
+        <h1 className="font-serif text-5xl leading-tight tracking-tight text-ink sm:text-6xl">
+          Today
+        </h1>
+        <p className="mt-4 max-w-xl text-sm leading-relaxed text-ink2">
+          A snapshot of medication adherence, sleep, and how you&rsquo;re feeling. Log
+          intake and metrics throughout the day to keep this view accurate.
+        </p>
+      </section>
 
-      <section className="grid gap-4 sm:grid-cols-3">
-        <StatCard
-          label="Adherence today"
+      <section className="grid gap-px overflow-hidden border border-rule bg-rule sm:grid-cols-3">
+        <Stat
+          label="Adherence"
           value={`${Math.round(adherenceToday * 100)}%`}
           hint={`${data.medications.length} medication${data.medications.length === 1 ? "" : "s"}`}
         />
-        <StatCard
+        <Stat
           label="Sleep"
           value={
             typeof todayMetric?.sleepHours === "number"
@@ -59,63 +66,73 @@ export default function DailySummaryPage() {
               : "Log in Metrics"
           }
         />
-        <StatCard
+        <Stat
           label="Mood / Energy"
           value={
             todayMetric?.moodAm || todayMetric?.energyAm
               ? `${todayMetric?.moodAm ?? "—"} / ${todayMetric?.energyAm ?? "—"}`
               : "—"
           }
-          hint="AM (1–10)"
+          hint="AM, scale 1–10"
         />
       </section>
 
       {alerts.length > 0 && (
-        <section className="space-y-2">
-          <h2 className="text-lg font-semibold">Alerts</h2>
-          {alerts.map((a) => (
-            <AlertBanner key={a.id} alert={a} />
-          ))}
+        <section className="space-y-4">
+          <div className="flex items-baseline justify-between border-b border-rule pb-3">
+            <h2 className="font-serif text-2xl text-ink">Alerts</h2>
+            <span className="eyebrow">{alerts.length} item{alerts.length === 1 ? "" : "s"}</span>
+          </div>
+          <div className="space-y-3">
+            {alerts.map((a) => (
+              <AlertBanner key={a.id} alert={a} />
+            ))}
+          </div>
         </section>
       )}
 
-      <section className="space-y-2">
-        <div className="flex items-baseline justify-between">
-          <h2 className="text-lg font-semibold">Top recommendations</h2>
-          <Link href="/recommendations" className="text-xs text-accent hover:underline">
+      <section className="space-y-4">
+        <div className="flex items-baseline justify-between border-b border-rule pb-3">
+          <h2 className="font-serif text-2xl text-ink">Recommendations</h2>
+          <Link href="/recommendations" className="eyebrow text-muted hover:text-ink">
             View all
           </Link>
         </div>
         {!hasGuidelineBase() ? (
-          <div className="rounded border border-border bg-panel p-4 text-sm text-muted">
-            {NOT_COVERED_MESSAGE}
-            <div className="mt-2 text-xs">
-              Add rules in <code className="text-accent">lib/guideline-rules.ts</code> using the
-              verbatim guideline base. See <code className="text-accent">docs/MASTER_PROMPT.md</code>.
-            </div>
+          <div className="card p-6 text-sm leading-relaxed text-ink2">
+            <div className="eyebrow mb-2">Not covered</div>
+            <p>{NOT_COVERED_MESSAGE}</p>
+            <p className="mt-3 text-xs text-muted">
+              Add rules in <code className="text-ink">lib/guideline-rules.ts</code>. See{" "}
+              <code className="text-ink">docs/MASTER_PROMPT.md</code>.
+            </p>
           </div>
         ) : recs.length === 0 ? (
-          <div className="rounded border border-border bg-panel p-4 text-sm text-muted">
+          <div className="card p-6 text-sm text-ink2">
             No recommendations apply to your most recent data. Log more in{" "}
-            <Link href="/metrics" className="text-accent hover:underline">
+            <Link href="/metrics" className="underline underline-offset-4">
               Metrics
             </Link>
             .
           </div>
         ) : (
-          recs.map((r) => <RecommendationCard key={r.ruleId} rec={r} />)
+          <div className="space-y-3">
+            {recs.map((r) => (
+              <RecommendationCard key={r.ruleId} rec={r} />
+            ))}
+          </div>
         )}
       </section>
     </div>
   );
 }
 
-function StatCard({ label, value, hint }: { label: string; value: string; hint: string }) {
+function Stat({ label, value, hint }: { label: string; value: string; hint: string }) {
   return (
-    <div className="rounded border border-border bg-panel p-4">
-      <div className="text-xs uppercase tracking-wide text-muted">{label}</div>
-      <div className="mt-1 text-2xl font-semibold text-text">{value}</div>
-      <div className="text-xs text-muted">{hint}</div>
+    <div className="bg-surface p-8">
+      <div className="eyebrow mb-3">{label}</div>
+      <div className="font-serif text-4xl leading-none tracking-tight text-ink">{value}</div>
+      <div className="mt-3 text-xs text-muted">{hint}</div>
     </div>
   );
 }

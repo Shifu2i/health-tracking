@@ -2,11 +2,12 @@ import { EMERGENCY_GUIDANCE } from "@/lib/emergency";
 
 export default function EmergencyBanner({ label }: { label: string }) {
   return (
-    <div className="rounded border border-bad bg-bad/10 p-4 text-sm">
-      <div className="mb-2 font-semibold text-bad">
+    <div className="card border-2 border-ink p-5">
+      <div className="eyebrow text-ink">Urgent</div>
+      <p className="mt-2 font-serif text-lg text-ink">
         Your input mentioned {label}. Routine recommendations are paused.
-      </div>
-      <ul className="list-disc space-y-1 pl-5 text-text">
+      </p>
+      <ul className="mt-4 space-y-2 border-t border-rule pt-4 text-sm text-ink2">
         {EMERGENCY_GUIDANCE.map((line) => (
           <li key={line}>{line}</li>
         ))}

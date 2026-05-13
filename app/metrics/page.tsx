@@ -17,60 +17,60 @@ export default function MetricsPage() {
     .slice(0, 14);
 
   return (
-    <div className="space-y-6">
-      <header>
-        <h1 className="text-2xl font-semibold">Metrics</h1>
-        <p className="text-sm text-muted">
+    <div className="space-y-16">
+      <section className="border-b border-rule pb-10">
+        <div className="eyebrow mb-4">Metrics</div>
+        <h1 className="font-serif text-5xl leading-tight tracking-tight text-ink sm:text-6xl">
+          What you logged
+        </h1>
+        <p className="mt-4 max-w-xl text-sm leading-relaxed text-ink2">
           Manual entry for sleep, light, caffeine, meals, exercise, mood, and energy.
-          Bevel sync (when configured in Settings) supplements this.
+          Bevel sync supplements this when configured in Settings.
         </p>
-      </header>
+      </section>
 
-      <section className="space-y-3">
-        <h2 className="text-lg font-semibold">New entry</h2>
+      <section className="space-y-4">
+        <div className="flex items-baseline justify-between border-b border-rule pb-3">
+          <h2 className="font-serif text-2xl text-ink">New entry</h2>
+        </div>
         <MetricEntryForm onAdded={refresh} />
       </section>
 
-      <section className="space-y-3">
-        <h2 className="text-lg font-semibold">Recent entries ({recent.length})</h2>
+      <section className="space-y-4">
+        <div className="flex items-baseline justify-between border-b border-rule pb-3">
+          <h2 className="font-serif text-2xl text-ink">Recent entries</h2>
+          <span className="eyebrow">{recent.length} item{recent.length === 1 ? "" : "s"}</span>
+        </div>
         {recent.length === 0 ? (
-          <div className="rounded border border-border bg-panel p-4 text-sm text-muted">
-            No entries yet.
-          </div>
+          <div className="card p-6 text-sm text-ink2">No entries yet.</div>
         ) : (
-          <div className="overflow-x-auto rounded border border-border">
+          <div className="overflow-x-auto border border-rule bg-surface">
             <table className="min-w-full text-sm">
-              <thead className="bg-panel text-left text-xs uppercase tracking-wide text-muted">
-                <tr>
-                  <th className="px-3 py-2">Date</th>
-                  <th className="px-3 py-2">Source</th>
-                  <th className="px-3 py-2">Sleep</th>
-                  <th className="px-3 py-2">HRV</th>
-                  <th className="px-3 py-2">RHR</th>
-                  <th className="px-3 py-2">Caffeine</th>
-                  <th className="px-3 py-2">Exercise</th>
-                  <th className="px-3 py-2">Mood AM/PM</th>
+              <thead className="border-b border-rule">
+                <tr className="text-left">
+                  <Th>Date</Th>
+                  <Th>Source</Th>
+                  <Th>Sleep</Th>
+                  <Th>HRV</Th>
+                  <Th>RHR</Th>
+                  <Th>Caffeine</Th>
+                  <Th>Exercise</Th>
+                  <Th>Mood AM/PM</Th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border">
+              <tbody className="divide-y divide-rule">
                 {recent.map((m) => (
-                  <tr key={m.id} className="bg-bg/40">
-                    <td className="px-3 py-2">{m.date}</td>
-                    <td className="px-3 py-2 text-muted">{m.source}</td>
-                    <td className="px-3 py-2">
-                      {typeof m.sleepHours === "number" ? `${m.sleepHours.toFixed(1)}h` : "—"}
-                    </td>
-                    <td className="px-3 py-2">{m.hrv ?? "—"}</td>
-                    <td className="px-3 py-2">{m.restingHeartRate ?? "—"}</td>
-                    <td className="px-3 py-2">
-                      {typeof m.caffeineMg === "number" ? `${m.caffeineMg}mg` : "—"}
-                    </td>
-                    <td className="px-3 py-2">
+                  <tr key={m.id} className="hover:bg-hover">
+                    <Td>{m.date}</Td>
+                    <Td className="text-muted">{m.source}</Td>
+                    <Td>{typeof m.sleepHours === "number" ? `${m.sleepHours.toFixed(1)}h` : "—"}</Td>
+                    <Td>{m.hrv ?? "—"}</Td>
+                    <Td>{m.restingHeartRate ?? "—"}</Td>
+                    <Td>{typeof m.caffeineMg === "number" ? `${m.caffeineMg}mg` : "—"}</Td>
+                    <Td>
                       {m.exerciseMinutes ? `${m.exerciseMinutes}m ${m.exerciseIntensity ?? ""}` : "—"}
-                    </td>
-                    <td className="px-3 py-2">
-                      {(m.moodAm ?? "—") + " / " + (m.moodPm ?? "—")}
-                    </td>
+                    </Td>
+                    <Td>{(m.moodAm ?? "—") + " / " + (m.moodPm ?? "—")}</Td>
                   </tr>
                 ))}
               </tbody>
@@ -80,4 +80,12 @@ export default function MetricsPage() {
       </section>
     </div>
   );
+}
+
+function Th({ children }: { children: React.ReactNode }) {
+  return <th className="px-4 py-3 text-[11px] uppercase tracking-eyebrow text-muted">{children}</th>;
+}
+
+function Td({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return <td className={`px-4 py-3 text-ink ${className}`}>{children}</td>;
 }

@@ -4,13 +4,37 @@
 
 html,
 body {
-  background-color: #0b0f14;
-  color: #e5e7eb;
+  background-color: #f6f4ef;
+  color: #0f0f0f;
   min-height: 100vh;
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer base {
+  h1, h2, h3 {
+    font-family: var(--font-serif, ui-serif, Georgia, serif);
+    letter-spacing: -0.01em;
+  }
 }
 
 @layer components {
+  .eyebrow {
+    @apply text-[11px] uppercase tracking-eyebrow text-muted;
+  }
+  .rule {
+    @apply border-t border-rule;
+  }
+  .card {
+    @apply rounded-none border border-rule bg-surface;
+  }
   .input {
-    @apply rounded border border-border bg-bg px-2 py-1 text-sm text-text outline-none focus:border-accent;
+    @apply w-full border-0 border-b border-rule2 bg-transparent px-0 py-2 text-sm text-ink outline-none transition-colors placeholder:text-muted focus:border-ink;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center border border-ink bg-ink px-4 py-2 text-xs uppercase tracking-eyebrow text-bg transition-colors hover:bg-bg hover:text-ink disabled:cursor-not-allowed disabled:opacity-40;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center border border-rule2 bg-transparent px-3 py-1.5 text-xs uppercase tracking-eyebrow text-ink2 transition-colors hover:border-ink hover:text-ink;
   }
 }
