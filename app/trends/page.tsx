@@ -17,22 +17,24 @@ export default function TrendsPage() {
   const sleep30 = dailySleepSeries(data, 30);
 
   return (
-    <div className="space-y-6">
-      <header>
-        <h1 className="text-2xl font-semibold">Trends</h1>
-        <p className="text-sm text-muted">Weekly and monthly views of adherence and sleep.</p>
-      </header>
-
-      <section className="grid gap-4 sm:grid-cols-3">
-        <Stat label="Adherence (7d)" value={`${Math.round(adherenceRate(data, "week") * 100)}%`} />
-        <Stat label="Adherence (30d)" value={`${Math.round(adherenceRate(data, "month") * 100)}%`} />
-        <Stat
-          label="Avg sleep (7d)"
-          value={avgSleep(sleep7.map((s) => s.hours))}
-        />
+    <div className="space-y-16">
+      <section className="border-b border-rule pb-10">
+        <div className="eyebrow mb-4">Trends</div>
+        <h1 className="font-serif text-5xl leading-tight tracking-tight text-ink sm:text-6xl">
+          Over time
+        </h1>
+        <p className="mt-4 max-w-xl text-sm leading-relaxed text-ink2">
+          Weekly and monthly views of adherence and sleep.
+        </p>
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-2">
+      <section className="grid gap-px overflow-hidden border border-rule bg-rule sm:grid-cols-3">
+        <Stat label="Adherence — 7 days" value={`${Math.round(adherenceRate(data, "week") * 100)}%`} />
+        <Stat label="Adherence — 30 days" value={`${Math.round(adherenceRate(data, "month") * 100)}%`} />
+        <Stat label="Avg sleep — 7 days" value={avgSleep(sleep7.map((s) => s.hours))} />
+      </section>
+
+      <section className="grid gap-6 sm:grid-cols-2">
         <ChartPanel title="Adherence — last 7 days" labels={adh7.map((d) => d.date)}>
           <Sparkline
             values={adh7.map((d) => d.rate * 100)}
@@ -55,8 +57,6 @@ export default function TrendsPage() {
             max={Math.max(10, ...sleep7.map((d) => d.hours))}
             min={0}
             ariaLabel="Sleep hours last 7 days"
-            stroke="#34d399"
-            fill="rgba(52,211,153,0.15)"
           />
         </ChartPanel>
         <ChartPanel title="Sleep hours — last 30 days" labels={sleep30.map((d) => d.date)}>
@@ -65,8 +65,6 @@ export default function TrendsPage() {
             max={Math.max(10, ...sleep30.map((d) => d.hours))}
             min={0}
             ariaLabel="Sleep hours last 30 days"
-            stroke="#34d399"
-            fill="rgba(52,211,153,0.15)"
           />
         </ChartPanel>
       </section>
@@ -76,9 +74,9 @@ export default function TrendsPage() {
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded border border-border bg-panel p-4">
-      <div className="text-xs uppercase tracking-wide text-muted">{label}</div>
-      <div className="mt-1 text-2xl font-semibold text-text">{value}</div>
+    <div className="bg-surface p-8">
+      <div className="eyebrow mb-3">{label}</div>
+      <div className="font-serif text-4xl leading-none tracking-tight text-ink">{value}</div>
     </div>
   );
 }
@@ -93,11 +91,11 @@ function ChartPanel({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded border border-border bg-panel p-4">
-      <div className="mb-2 text-sm text-muted">{title}</div>
+    <div className="card p-6">
+      <div className="eyebrow mb-4">{title}</div>
       {children}
       {labels.length > 0 && (
-        <div className="mt-2 flex justify-between text-[10px] text-muted">
+        <div className="mt-3 flex justify-between text-[10px] uppercase tracking-eyebrow text-muted">
           <span>{labels[0]}</span>
           <span>{labels[labels.length - 1]}</span>
         </div>

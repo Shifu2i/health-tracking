@@ -15,14 +15,14 @@ export default function Sparkline({
   min,
   width = 320,
   height = 80,
-  stroke = "#60a5fa",
-  fill = "rgba(96,165,250,0.15)",
+  stroke = "#0f0f0f",
+  fill = "rgba(15,15,15,0.08)",
   ariaLabel,
 }: Props) {
   if (values.length === 0) {
     return (
       <div
-        className="flex items-center justify-center rounded border border-border bg-panel text-xs text-muted"
+        className="flex items-center justify-center border border-rule bg-surface text-xs text-muted"
         style={{ width, height }}
         role="img"
         aria-label={`${ariaLabel} (no data)`}
@@ -50,10 +50,11 @@ export default function Sparkline({
       viewBox={`0 0 ${width} ${height}`}
       role="img"
       aria-label={ariaLabel}
-      className="block"
+      className="block w-full"
+      preserveAspectRatio="none"
     >
       <polygon points={area} fill={fill} />
-      <polyline points={points} fill="none" stroke={stroke} strokeWidth={2} />
+      <polyline points={points} fill="none" stroke={stroke} strokeWidth={1.25} />
     </svg>
   );
 }

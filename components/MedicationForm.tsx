@@ -42,10 +42,7 @@ export default function MedicationForm({ onAdded }: Props) {
   };
 
   return (
-    <form
-      onSubmit={submit}
-      className="grid gap-3 rounded border border-border bg-panel p-4 sm:grid-cols-2"
-    >
+    <form onSubmit={submit} className="card grid gap-x-8 gap-y-5 p-6 sm:grid-cols-2">
       <Field label="Name" required>
         <input
           value={name}
@@ -94,10 +91,7 @@ export default function MedicationForm({ onAdded }: Props) {
         <input value={notes} onChange={(e) => setNotes(e.target.value)} className="input" />
       </Field>
       <div className="sm:col-span-2">
-        <button
-          type="submit"
-          className="rounded bg-accent px-4 py-2 text-sm font-medium text-bg hover:opacity-90"
-        >
+        <button type="submit" className="btn">
           Add medication
         </button>
       </div>
@@ -115,10 +109,10 @@ function Field({
   children: React.ReactNode;
 }) {
   return (
-    <label className="flex flex-col gap-1 text-sm">
-      <span className="text-muted">
+    <label className="flex flex-col gap-2">
+      <span className="eyebrow">
         {label}
-        {required && <span className="text-bad"> *</span>}
+        {required && <span className="text-ink"> *</span>}
       </span>
       {children}
     </label>
